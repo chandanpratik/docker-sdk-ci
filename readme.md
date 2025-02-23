@@ -1,6 +1,6 @@
-# 🚀🎨 CI4 Docker SDK 🎨🚀
+# 🚀🎨 CI4 Docker SDK | Universal 🎨🚀
 
-This script provides a **funky & stylish** way to manage a Dockerized CodeIgniter 4 (CI4) environment. It helps **start, stop, and interact** with CI4 containers **effortlessly!** 🎉
+This script provides a **funky & stylish** way to manage a Dockerized CodeIgniter 4 (CI4) environment. It helps **start, stop, and interact** with CI4 containers **effortlessly!** and can be used othe php frameworks as well 🎉
 
 ---
 
