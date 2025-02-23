@@ -27,7 +27,7 @@ Ensure you have the following installed on your system:
 The script supports the following **funky commands**:
 ### ⚡ Bootstrap Project Setup ⚡
 ```sh
-🚀 git clone https://github.com/chandanpratik/docker-sdk-ci ./docker
+🚀 git clone https://github.com/chandanpratik/docker-sdk-ci ./docker && chmod +x ./docker/sdk
 ```
 
 ### ⚡ Bootstrap Project Setup ⚡
