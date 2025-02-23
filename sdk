@@ -13,7 +13,7 @@ CYAN="\e[36m"
 RESET="\e[0m"
 
 # List of containers to manage
-containers=("ci4-php" "ci4-nginx" "ci4-mariadb" "ci4-phpmyadmin")
+containers=("ci4-nginx" "ci4-php" "ci4-mariadb" "ci4-phpmyadmin")
 
 # Check if a container exists (running or stopped)
 does_container_exist() {
@@ -75,8 +75,13 @@ show_banner
 
 # Command handling
 if [ "$1" == "up" ]; then
-    stop_containers
-    start_or_restart_containers
+#    stop_containers
+#    start_or_restart_containers
+    docker compose down
+    docker compose up -d --build
+HOSTNAME=$(hostname -I | awk '{print $1}')  # Get the first IP of the machine
+
+    echo -e "${GREEN}Application is up and running on http://${HOSTNAME}:8081${RESET}"
 
 elif [ "$1" == "down" ]; then
     echo -e "🛑 ${RED}Stopping CI4 Docker containers...${RESET}"
