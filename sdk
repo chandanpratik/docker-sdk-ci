@@ -80,6 +80,8 @@ if [ "$1" == "up" ]; then
     docker compose down
     docker/sdk boot
     docker compose -f ./docker/docker-compose.yml up -d --build
+    echo -e "${YELLOW}Installing Dependencies...${RESET}"
+    docker exec -it ci4-php composer install
 HOSTNAME=$(hostname -I | awk '{print $1}')  # Get the first IP of the machine
     echo -e "${YELLOW} Please make sure that the values below are updated in your .env file in order to connect to database."
     echo "          database.default.hostname = mariadb
