@@ -1,0 +1,93 @@
+#!/bin/bash
+#Author: Chandan Kumar <ranjanpratik@yahoo.in>
+# Import the bootstrap function
+source "$(dirname "$0")/bootstrap.sh"
+
+# Define colors
+GREEN="\e[32m"
+YELLOW="\e[33m"
+RED="\e[31m"
+BLUE="\e[34m"
+CYAN="\e[36m"
+RESET="\e[0m"
+
+# List of containers
+containers=("ci4-php" "ci4-nginx" "ci4-mariadb" "ci4-phpmyadmin")
+
+# Check if a container exists (running or stopped)
+does_container_exist() {
+    local container_name=$1
+    docker ps -a --filter "name=${container_name}" -q | grep -q .
+}
+
+# Check if a container is running
+is_container_running() {
+    local container_name=$1
+    docker ps --filter "name=${container_name}" --filter "status=running" -q | grep -q .
+}
+
+# Restart or start containers
+start_or_restart_container() {
+    local container_name=$1
+    if is_container_running "$container_name"; then
+        echo -e "🔄 Restarting ${GREEN}$container_name${RESET}..."
+        docker restart "$container_name"
+    elif does_container_exist "$container_name"; then
+        echo -e "⚡ ${YELLOW}$container_name exists but is stopped. Starting it...${RESET}"
+        docker start "$container_name"
+    else
+        echo -e "🚀 ${CYAN}$container_name not found. Building and starting it...${RESET}"
+        docker-compose up -d --build "$container_name"
+    fi
+}
+
+# Banner function
+show_banner() {
+    echo -e "${GREEN}"
+    echo "  ██████  ██   ██  █████  ███    ██ ██████   █████  ███    ██ "
+    echo " ██       ██   ██ ██   ██ ████   ██ ██   ██ ██   ██ ████   ██ "
+    echo " ██       ███████ ███████ ██ ██  ██ ██   ██ ███████ ██ ██  ██ "
+    echo " ██       ██   ██ ██   ██ ██  ██ ██ ██   ██ ██   ██ ██  ██ ██ "
+    echo "  ██████  ██   ██ ██   ██ ██   ████ ██████  ██   ██ ██   ████ "
+    echo -e "${BLUE}"
+
+    echo -e "${GREEN}"
+    echo" |┌────╮       ┌─┐           ╭────┬────╮─┬─┐"
+    echo" |│  ╮ │───┬───┤ ├─┬───┬─┬─┐ │ ───┤  ╮ │ ┌─┘"
+    echo" |│  ╯ │ ┼ │ ├─┤───┤ ┼─┤ ┌─╯ ├─── │  ╯ │ └─┐"
+    echo "|└────┴───┴───┴─┴─┴───┴─┘   └────┴────┴─┴─┘"
+    echo -e "${BLUE}"
+}
+
+# Show banner
+show_banner
+
+# Command handling
+if [ "$1" == "up" ]; then
+    echo -e "🚀 ${CYAN}Ensuring CI4 Docker containers are running...${RESET}"
+    for container in "${containers[@]}"; do
+        start_or_restart_container "$container"
+    done
+    docker-compose up -d --build
+    echo "App started on you-host:8081"
+
+elif [ "$1" == "down" ]; then
+    echo -e "🛑 ${RED}Stopping CI4 Docker containers...${RESET}"
+    docker-compose down
+
+elif [ "$1" == "cli" ]; then
+    echo -e "${CYAN}Welcome to the CodeIgniter 4 CLI inside Docker!${RESET}"
+    echo -e "${YELLOW}Type your CI4 command or 'exit' to quit.${RESET}"
+    docker exec -it ci4-php sh
+
+elif [ "$1" == "boot" ]; then
+    echo -e "${GREEN}⚡ Bootstrapping the project...${RESET}"
+    bootstrap
+
+else
+    echo -e "${RED}❌ Invalid command!${RESET} Usage:"
+    echo -e "${GREEN} docker/sdk up     → Start CI4 containers"
+    echo -e "${GREEN} docker/sdk down   → Stop CI4 containers"
+    echo -e "${GREEN} docker/sdk cli    → Cli to CI4 App"
+    echo -e "${GREEN} docker/sdk boot   → Bootstrap project setup"
+fi
