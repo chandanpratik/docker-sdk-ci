@@ -7,7 +7,7 @@ fi
 
 # Define directories
 DOCKER_DIR="./docker"
-NGINX_DIR="./nginx"
+NGINX_DIR="./${DOCKER_DIR}/nginx"
 GREEN="\e[32m"
 # Prompt for hostname if nginx config doesn't exist
 if [ ! -f "$NGINX_DIR/default.conf" ]; then
@@ -69,7 +69,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copy application source code
-COPY ./src /var/www/html
+COPY ../ /var/www/html
 
 # Set appropriate permissions
 RUN chown -R www-data:www-data /var/www/html
@@ -87,18 +87,18 @@ else
 fi
 
 # Create docker-compose.yml if it doesn't exist
-if [ ! -f "docker-compose.yml" ]; then
-    cat <<EOF > docker-compose.yml
+if [ ! -f "./${DOCKER_DIR}/docker-compose.yml" ]; then
+    cat <<EOF > "./${DOCKER_DIR}/docker-compose.yml"
 version: '3.8'
 
 services:
   ci4-php:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     container_name: ci4-php
     volumes:
-      - ./src:/var/www/html:delegated
+      - ../:/var/www/html:delegated
     networks:
       - ci4-network
     depends_on:
@@ -110,7 +110,7 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./src:/var/www/html
+      - ../:/var/www/html
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
       - ci4-network
@@ -157,5 +157,5 @@ else
     echo "⚡ docker-compose.yml already exists. Skipping..."
 fi
 
-echo "🚀 Project is already bootstrapped! Please use docker/sdk up  to start the services"
+echo "🚀 Project is bootstrapped! Please use docker/sdk up to start the services from the next time for this project..Running docker/sdk up"
 }
