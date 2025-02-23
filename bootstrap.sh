@@ -8,7 +8,7 @@ fi
 # Define directories
 DOCKER_DIR="./docker"
 NGINX_DIR="./nginx"
-
+GREEN="\e[32m"
 # Prompt for hostname if nginx config doesn't exist
 if [ ! -f "$NGINX_DIR/default.conf" ]; then
     echo "Enter the hostname (e.g., ci4.local) and update it as the base URL in your CI4 Application:"
@@ -40,9 +40,9 @@ server {
     }
 }
 EOF
-    echo "✅ nginx/default.conf created successfully with server_name: $APP_HOST_NAME"
+    echo -e "${GREEN}✅ nginx service configuration created successfully with server_name: $APP_HOST_NAME"
 else
-    echo "⚡ nginx/default.conf already exists. Skipping..."
+    echo -e "${GREEN}⚡ nginx service configuration already exists. Skipping..."
 fi
 
 # Create Dockerfile if it doesn't exist
@@ -81,9 +81,9 @@ EXPOSE 9000
 # Start PHP-FPM
 CMD ["php-fpm"]
 EOF
-    echo "✅ Dockerfile created successfully in $DOCKER_DIR."
+    echo "✅ Docker configuration created successfully in $DOCKER_DIR."
 else
-    echo "⚡ Dockerfile already exists. Skipping..."
+    echo "⚡ Docker configuration already exists. Skipping..."
 fi
 
 # Create docker-compose.yml if it doesn't exist
