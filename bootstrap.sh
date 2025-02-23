@@ -1,5 +1,4 @@
 #!/bin/bash
-#Author: Chandan Kumar <ranjanpratik@yahoo.in>
 bootstrap(){
 if [ ! -x "$0" ]; then
     chmod +x "$0"
@@ -74,6 +73,7 @@ COPY ./src /var/www/html
 
 # Set appropriate permissions
 RUN chown -R www-data:www-data /var/www/html
+RUN git config --global --add safe.directory /var/www/html
 
 # Expose PHP-FPM port
 EXPOSE 9000
@@ -81,7 +81,6 @@ EXPOSE 9000
 # Start PHP-FPM
 CMD ["php-fpm"]
 EOF
-
     echo "✅ Dockerfile created successfully in $DOCKER_DIR."
 else
     echo "⚡ Dockerfile already exists. Skipping..."

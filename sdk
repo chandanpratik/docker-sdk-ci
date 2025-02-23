@@ -54,15 +54,15 @@ start_or_restart_containers() {
 
 # Banner function
 show_banner() {
-    echo -e "${GREEN}"
-    echo "  ██████  ██   ██  █████  ███    ██ ██████   █████  ███    ██ "
-    echo " ██       ██   ██ ██   ██ ████   ██ ██   ██ ██   ██ ████   ██ "
-    echo " ██       ███████ ███████ ██ ██  ██ ██   ██ ███████ ██ ██  ██ "
-    echo " ██       ██   ██ ██   ██ ██  ██ ██ ██   ██ ██   ██ ██  ██ ██ "
-    echo "  ██████  ██   ██ ██   ██ ██   ████ ██████  ██   ██ ██   ████ "
+    echo -e "${BLUE}"
+    echo " ____ _   _    _    _   _ ____    _    _   _ "
+    echo "/ ___| | | |  / \  | \ | |  _ \  / \  | \ | |"
+    echo " |   | |_| | / _ \ |  \| | | | |/ _ \ |  \| |"
+    echo " |___|  _  |/ ___ \| |\  | |_| / ___ \| |\  |"
+    echo "\____|_| |_/_/   \_\_| \_|____/_/   \_\_| \_|"
     echo -e "${BLUE}"
 
-    echo -e "${GREEN}"
+    echo -e "${RED}"
     echo "┌────╮       ┌─┐           ╭────┬────╮─┬─┐"
     echo "│  ╮ │───┬───┤ ├─┬───┬─┬─┐ │ ───┤  ╮ │ ┌─┘"
     echo "│  ╯ │ ┼ │ ├─┤───┤ ┼─┤ ┌─╯ ├─── │  ╯ │ └─┐"
@@ -83,9 +83,11 @@ elif [ "$1" == "down" ]; then
     stop_containers  # Only stops, does not remove volumes
 
 elif [ "$1" == "cli" ]; then
+    CONTAINER_NAME="ci4-php"
     echo -e "${CYAN}Welcome to the CodeIgniter 4 CLI inside Docker!${RESET}"
     echo -e "${YELLOW}Type your CI4 command or 'exit' to quit.${RESET}"
-    docker exec -it ci4-php sh
+    echo -e "${YELLOW}Opening interactive shell in docker/sdk cli${RESET}"
+    docker exec -it "$CONTAINER_NAME" sh -c 'export PS1="\033[1;34m CodeIgniter CLI> \033[0m" && exec sh'
 
 elif [ "$1" == "boot" ]; then
     echo -e "${GREEN}⚡ Bootstrapping the project...${RESET}"
